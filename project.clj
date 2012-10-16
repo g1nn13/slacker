@@ -6,7 +6,7 @@
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.4.0"]
                  [link "0.3.3"]
-                 [com.roomkey/carbonite "0.2.3"]
+                 [info.sunng/carbonite "0.2.3"]
                  [cheshire "4.0.0"]
                  [slingshot "0.10.3"]
                  [org.clojure/java.jmx "0.1"]
