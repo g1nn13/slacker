@@ -1,4 +1,4 @@
-(defproject com.roomkey/slacker "0.8.5"
+(defproject com.roomkey/slacker "lein-version"
   :description "Transparent, non-invasive RPC by clojure and for clojure"
   :url "http://github.com/g1nn13/slacker"
   :license {:name "Eclipse Public License"
@@ -14,9 +14,16 @@
   :profiles {:dev {:resource-paths ["examples"]
                    :dependencies [[codox "0.6.1"]]}
              :1.3 {:dependencies [org.clojure/clojure "1.3.0"]}}
-  :plugins [[lein-exec "0.2.0"]]
+
+  :plugins [[lein-exec "0.2.0"]
+            [s3-wagon-private "1.1.2"]]
+
+  :repositories {"releases"  {:url "s3p://rk-maven/releases/"}
+                 "snapshots" {:url "s3p://rk-maven/snapshots/"}}
+
+  :hooks [leiningen.v]
+
   :warn-on-reflection true
-  :aliases {"run-example-server" ["run" "-m" "slacker.example.server"]
-            "run-example-client" ["run" "-m" "slacker.example.client"]})
 
-
+  :aliases {"run-example-server" ["run" "-m" "slacker.example.cluster-server"]
+            "run-example-client" ["run" "-m" "slacker.example.cluster-client"]})
