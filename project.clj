@@ -5,12 +5,12 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [link "0.3.3"]
+                 [link "0.4.0"]
                  [info.sunng/carbonite "0.2.3"]
-                 [cheshire "4.0.0"]
+                 [cheshire "4.0.3"]
                  [slingshot "0.10.3"]
-                 [org.clojure/java.jmx "0.1"]
-                 [org.clojure/tools.logging "0.2.3"]]
+                 [org.clojure/java.jmx "0.2.0"]
+                 [org.clojure/tools.logging "0.2.4"]]
   :profiles {:dev {:resource-paths ["examples"]
                    :dependencies [[codox "0.6.1"]]}
              :1.3 {:dependencies [org.clojure/clojure "1.3.0"]}}

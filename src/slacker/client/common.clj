@@ -49,28 +49,24 @@
   (inspect [this cmd args])
   (close [this]))
 
-(deftype SlackerClient [conn rmap trans-id-gen content-type ob-init ob-max]
+(deftype SlackerClient [conn rmap trans-id-gen content-type]
   SlackerClientProtocol
   (sync-call-remote [this ns-name func-name params]
-    (binding [*ob-init* ob-init
-              *ob-max* ob-max]
-      (let [fname (str ns-name "/" func-name)
-            tid (swap! trans-id-gen inc)
-            request (make-request tid content-type fname params)
-            prms (promise)]
-        (swap! rmap assoc tid {:promise prms})
-        (if (link.core/valid? conn)
-          (send conn request)
-          (log/warn "sync-call-remote on invalid conn: " conn))
-        (deref prms *timeout* nil)
-        (if (realized? prms)
-          (handle-response @prms)
-          (do
-            (swap! rmap dissoc tid)
-            (throw+ {:error :timeout}))))))
+    (let [fname (str ns-name "/" func-name)
+          tid (swap! trans-id-gen inc)
+          request (make-request tid content-type fname params)
+          prms (promise)]
+      (swap! rmap assoc tid {:promise prms})
+      (if (link.core/valid? conn)
+        (send conn request)
+        (log/warn "sync-call-remote on invalid conn: " conn))
+      (deref prms *timeout* nil)
+      (if (realized? prms)
+        (handle-response @prms)
+        (do
+          (swap! rmap dissoc tid)
+          (throw+ {:error :timeout})))))
   (async-call-remote [this ns-name func-name params cb]
-    (binding [*ob-init* ob-init
-              *ob-max* ob-max]
       (let [fname (str ns-name "/" func-name)
             tid (swap! trans-id-gen inc)
             request (make-request tid content-type fname params)
@@ -79,10 +75,8 @@
         (if (link.core/valid? conn)
           (send conn request)
           (log/warn "async-call-remote on invalid conn: " conn))
-        prms)))
+        prms))
   (inspect [this cmd args]
-    (binding [*ob-init* ob-init
-              *ob-max* ob-max]
       (let [tid (swap! trans-id-gen inc)
             request (make-inspect-request tid cmd args)
             prms (promise)]
@@ -92,7 +86,7 @@
           (log/warn "inspect on invalid conn: " conn))
         (deref prms *timeout* nil)
         (if (realized? prms)
-          (parse-inspect-response @prms)))))
+          (parse-inspect-response @prms))))
   (close [this]
     (link.core/close conn)))
 
@@ -133,14 +127,17 @@
    "readWriteFair" true,
    "connectTimeoutMillis" 3000})
 
+(defonce request-map (atom {}));; shared between multiple connections
+(defonce transaction-id-counter (atom 0))
+(defonce slacker-client-factory
+  (let [handler (create-link-handler request-map)]
+    (tcp-client-factory handler
+                        :codec slacker-base-codec
+                        :tcp-options tcp-options)))
+
 (defn create-client [host port content-type]
-  (let [rmap (atom  {})
-        handler (create-link-handler rmap)
-        client (tcp-client host port handler
-                           :codec slacker-base-codec
-                           :tcp-options tcp-options)]
-    ; Passing in currently bound values of *ob-init*, *ob-max*
-    (SlackerClient. client rmap (atom 0) content-type *ob-init* *ob-max*)))
+  (let [client (tcp-client slacker-client-factory host port)]
+    (SlackerClient. client request-map transaction-id-counter content-type)))
 
 (defn invoke-slacker
   "Invoke remote function with given slacker connection.
