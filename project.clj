@@ -19,7 +19,7 @@
             [lein-exec "0.2.0"]
             [lein-maven-s3-wagon "0.2.3"]]
 
-  :repositories {"releases"  {:url "s3://rk-maven/releases/"}
+  :repositories {"rk-public" {:url "http://rk-maven-public.s3-website-us-east-1.amazonaws.com/releases/"} "releases"  {:url "s3://rk-maven/releases/"}
                  "snapshots" {:url "s3://rk-maven/snapshots/"}}
 
   :warn-on-reflection true
