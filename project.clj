@@ -17,10 +17,10 @@
 
   :plugins [[com.roomkey/lein-v "3.3.5"]
             [lein-exec "0.2.0"]
-            [s3-wagon-private "1.1.2"]]
+            [lein-maven-s3-wagon "0.2.3"]]
 
-  :repositories {"releases"  {:url "s3p://rk-maven/releases/"}
-                 "snapshots" {:url "s3p://rk-maven/snapshots/"}}
+  :repositories {"releases"  {:url "s3://rk-maven/releases/"}
+                 "snapshots" {:url "s3://rk-maven/snapshots/"}}
 
   :warn-on-reflection true
 
