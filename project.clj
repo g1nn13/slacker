@@ -1,6 +1,6 @@
 (defproject com.roomkey/slacker :lein-v
   :description "Transparent, non-invasive RPC by clojure and for clojure"
-  :url "http://github.com/g1nn13/slacker"
+  :url "http://github.com/roomkey/slacker"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :min-lein-version "2.0.0"
@@ -19,7 +19,8 @@
             [lein-exec "0.2.0"]
             [lein-maven-s3-wagon "0.2.4"]]
 
-  :repositories {"rk-public" {:url "http://rk-maven-public.s3-website-us-east-1.amazonaws.com/releases/"} "releases"  {:url "s3://rk-maven/releases/"}
+  :repositories {"rk-public" {:url "http://rk-maven-public.s3-website-us-east-1.amazonaws.com/releases/"}
+                 "releases"  {:url "s3://rk-maven/releases/"}
                  "snapshots" {:url "s3://rk-maven/snapshots/"}}
 
   :warn-on-reflection true
