@@ -16,8 +16,7 @@
              :1.3 {:dependencies [org.clojure/clojure "1.3.0"]}}
 
   :plugins [[com.roomkey/lein-v "3.3.5"]
-            [lein-exec "0.2.0"]
-            [lein-maven-s3-wagon "0.2.4"]]
+            [lein-exec "0.2.0"]]
 
   :repositories {"rk-public" {:url "http://rk-maven-public.s3-website-us-east-1.amazonaws.com/releases/"}
                  "releases"  {:url "s3://rk-maven/releases/"}
